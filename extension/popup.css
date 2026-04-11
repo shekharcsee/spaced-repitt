@@ -1,0 +1,217 @@
+:root {
+  --bg: #09141c;
+  --panel: #102531;
+  --panel-soft: #153340;
+  --line: rgba(163, 221, 235, 0.16);
+  --text: #edf9fc;
+  --muted: #9bb9c2;
+  --accent: #79e3b6;
+  --accent-strong: #cffff0;
+  --danger: #ffaea8;
+  --shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 420px;
+  min-height: 560px;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(121, 227, 182, 0.16), transparent 24%),
+    linear-gradient(180deg, #0a141b 0%, #071016 100%);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.popup-shell {
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.hero h1,
+.section-head h2 {
+  margin: 0;
+}
+
+.hero-copy,
+.helper-text,
+.empty-state,
+.card-text,
+.meta-line {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  color: var(--accent-strong);
+}
+
+.eyebrow.small {
+  margin-bottom: 6px;
+}
+
+.panel {
+  background: rgba(16, 37, 49, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.status-row,
+.card-top,
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.status-label,
+.card-form label span,
+.stat-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.card-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.card-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.wide-field,
+.card-form button {
+  grid-column: 1 / -1;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: var(--text);
+  background: var(--panel-soft);
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 104px;
+}
+
+button {
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent) 0%, #48c4c9 100%);
+  color: #062118;
+  font-weight: 700;
+}
+
+.ghost-button {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat-card strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.4rem;
+}
+
+.card-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.study-card {
+  border: 1px solid rgba(163, 221, 235, 0.14);
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.study-card.inactive {
+  opacity: 0.68;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.chip {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  background: rgba(121, 227, 182, 0.12);
+  color: var(--accent-strong);
+}
+
+.chip.paused {
+  background: rgba(255, 174, 168, 0.12);
+  color: var(--danger);
+}
+
+.card-text {
+  margin: 0 0 10px;
+  white-space: pre-wrap;
+}
+
+.meta-line {
+  margin: 4px 0;
+  font-size: 0.88rem;
+}
+
+.card-actions {
+  margin-top: 12px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px dashed var(--line);
+}
+
+.hidden {
+  display: none;
+}

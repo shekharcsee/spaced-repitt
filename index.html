@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spaced Repetition Learning Web App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Spaced repetition learning</p>
+          <h1>Review the right thing on the right day.</h1>
+          <p class="hero-text">
+            Add a learning task once and the app automatically schedules Day 1,
+            Day 2, Day 4, Day 7, and Day 15 reviews in Firebase Firestore.
+          </p>
+        </div>
+
+        <section class="hero-panel">
+          <p class="panel-label">Active view</p>
+          <h2 id="activeDateLabel">Today</h2>
+          <p id="todaySummary" class="muted-text">
+            Loading today's review queue...
+          </p>
+        </section>
+      </header>
+
+      <main class="dashboard">
+        <section class="card composer-card">
+          <div class="section-head">
+            <div>
+              <p class="panel-label">Create task</p>
+              <h2>Add a new learning item</h2>
+            </div>
+          </div>
+
+          <form id="taskForm" class="task-form">
+            <label class="field">
+              <span>What do you want to remember?</span>
+              <div class="input-row">
+                <input
+                  id="taskInput"
+                  name="taskText"
+                  type="text"
+                  maxlength="180"
+                  placeholder="Example: Explain the fetch API request lifecycle."
+                  required
+                />
+                <button type="submit" class="primary-button">Add</button>
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Optional image</span>
+              <input id="taskImageInput" type="file" accept="image/*" />
+            </label>
+
+            <div id="imagePreview" class="image-preview hidden">
+              <img id="previewImage" alt="Selected task preview" />
+              <button id="clearImageBtn" type="button" class="secondary-button">
+                Remove image
+              </button>
+            </div>
+          </form>
+
+          <div class="schedule-preview">
+            <span>Automatic repetition pattern</span>
+            <div class="chip-row">
+              <span>Day 1</span>
+              <span>Day 2</span>
+              <span>Day 4</span>
+              <span>Day 7</span>
+              <span>Day 15</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="card">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">Search by date</p>
+                <h2>Filter reviews</h2>
+              </div>
+            </div>
+
+            <div class="filter-stack">
+              <label class="field">
+                <span>Show tasks scheduled for</span>
+                <input id="dateFilter" type="date" />
+              </label>
+              <button id="showTodayBtn" type="button" class="secondary-button">
+                Show Today
+              </button>
+            </div>
+          </section>
+
+          <section class="card stats-card">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">Progress</p>
+                <h2>Daily snapshot</h2>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <article>
+                <span>Total tasks</span>
+                <strong id="totalTasks">0</strong>
+              </article>
+              <article>
+                <span>Scheduled today</span>
+                <strong id="todayTasks">0</strong>
+              </article>
+              <article>
+                <span>Fully completed</span>
+                <strong id="completedTasks">0</strong>
+              </article>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <section class="card task-section">
+        <div class="task-section-head">
+          <div>
+            <p class="panel-label">Scheduled tasks</p>
+            <h2 id="resultsTitle">Today's reviews</h2>
+          </div>
+          <span id="resultsCount" class="results-pill">0 tasks</span>
+        </div>
+
+        <div id="statusBanner" class="status-banner">
+          Connecting to Firestore...
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          No tasks are scheduled for this date yet.
+        </div>
+
+        <div id="taskList" class="task-list" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

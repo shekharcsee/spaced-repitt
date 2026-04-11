@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoopLearn</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <section class="hero">
+        <p class="eyebrow">LoopLearn extension</p>
+        <h1>Reminder cards</h1>
+        <p class="hero-copy">
+          Add a concept, choose a repeat interval, and get looping browser reminders while you browse.
+        </p>
+      </section>
+
+      <section class="panel">
+        <div class="status-row">
+          <div>
+            <span class="status-label">Browser notifications</span>
+            <strong id="statusText">Checking...</strong>
+          </div>
+          <button id="testReminderBtn" class="ghost-button" type="button">Test</button>
+        </div>
+        <p id="statusHelp" class="helper-text">
+          Keep Chrome open so extension reminders can continue running.
+        </p>
+      </section>
+
+      <section class="panel">
+        <form id="cardForm" class="card-form">
+          <label class="wide-field">
+            <span>Concept text</span>
+            <textarea
+              id="cardText"
+              name="cardText"
+              rows="4"
+              placeholder="TCP uses a three-way handshake to establish a reliable connection."
+              required
+            ></textarea>
+          </label>
+
+          <label>
+            <span>Repeat every (minutes)</span>
+            <input
+              id="intervalMinutes"
+              name="intervalMinutes"
+              type="number"
+              min="1"
+              max="1440"
+              value="15"
+              required
+            />
+          </label>
+
+          <label>
+            <span>Label</span>
+            <input
+              id="cardLabel"
+              name="cardLabel"
+              type="text"
+              maxlength="40"
+              placeholder="Networking, biology..."
+            />
+          </label>
+
+          <button class="primary-button" type="submit">Add reminder</button>
+        </form>
+      </section>
+
+      <section class="stats-grid">
+        <article class="panel stat-card">
+          <span>Total cards</span>
+          <strong id="totalCardsStat">0</strong>
+        </article>
+        <article class="panel stat-card">
+          <span>Active loops</span>
+          <strong id="activeCardsStat">0</strong>
+        </article>
+        <article class="panel stat-card">
+          <span>Reminders sent</span>
+          <strong id="sentCountStat">0</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow small">Study queue</p>
+            <h2>Your cards</h2>
+          </div>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          Add your first reminder card to start the loop.
+        </div>
+        <div id="cardList" class="card-list"></div>
+      </section>
+    </main>
+
+    <script src="./popup.js"></script>
+  </body>
+</html>
