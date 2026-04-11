@@ -44,6 +44,7 @@ const SCHEDULE_STEPS = [
 
 let tasks = [];
 let selectedDate = getTodayDate();
+let currentView = "active";
 
 const taskForm = document.getElementById("taskForm");
 const taskInput = document.getElementById("taskInput");
@@ -63,6 +64,8 @@ const resultsCount = document.getElementById("resultsCount");
 const activeDateLabel = document.getElementById("activeDateLabel");
 const todaySummary = document.getElementById("todaySummary");
 const statusBanner = document.getElementById("statusBanner");
+const activeViewBtn = document.getElementById("activeViewBtn");
+const doneViewBtn = document.getElementById("doneViewBtn");
 
 init();
 
@@ -78,6 +81,8 @@ function attachEvents() {
   clearImageBtn.addEventListener("click", clearSelectedImage);
   dateFilter.addEventListener("change", handleDateFilterChange);
   showTodayBtn.addEventListener("click", showToday);
+  activeViewBtn.addEventListener("click", () => setCurrentView("active"));
+  doneViewBtn.addEventListener("click", () => setCurrentView("done"));
   taskList.addEventListener("change", handleTaskListChange);
   taskList.addEventListener("click", handleTaskListClick);
 }
@@ -189,6 +194,11 @@ function handleDateFilterChange(event) {
 function showToday() {
   selectedDate = getTodayDate();
   dateFilter.value = selectedDate;
+  renderTasks();
+}
+
+function setCurrentView(viewName) {
+  currentView = viewName;
   renderTasks();
 }
 
@@ -365,18 +375,27 @@ function renderTasks() {
     ? `${filteredTasks.length} task${filteredTasks.length === 1 ? "" : "s"} scheduled for today's review.`
     : `${filteredTasks.length} task${filteredTasks.length === 1 ? "" : "s"} scheduled for ${formatLongDate(selectedDate)}.`;
 
+  const tasksToRender = currentView === "active" ? pendingTasks : doneTasks;
+  const titlePrefix = currentView === "active" ? "Reviews" : "Done reviews";
+
   resultsTitle.textContent = showingToday
-    ? "Today's reviews"
-    : `Reviews for ${formatLongDate(selectedDate)}`;
+    ? currentView === "active"
+      ? "Today's reviews"
+      : "Today's completed reviews"
+    : `${titlePrefix} for ${formatLongDate(selectedDate)}`;
 
-  resultsCount.textContent = `${pendingTasks.length} active task${pendingTasks.length === 1 ? "" : "s"}`;
+  resultsCount.textContent = `${tasksToRender.length} task${tasksToRender.length === 1 ? "" : "s"}`;
   emptyState.classList.toggle("hidden", filteredTasks.length > 0);
+  emptyState.textContent =
+    currentView === "active"
+      ? "No active tasks are scheduled for this date yet."
+      : "No completed tasks for this date yet.";
 
-  taskList.innerHTML = filteredTasks.length
-    ? `
-        ${renderTaskGroup("To Do", pendingTasks, selectedDate, "No active tasks left for this date.")}
-        ${renderTaskGroup("Done", doneTasks, selectedDate, "Nothing completed for this date yet.")}
-      `
+  activeViewBtn.classList.toggle("is-active", currentView === "active");
+  doneViewBtn.classList.toggle("is-active", currentView === "done");
+
+  taskList.innerHTML = tasksToRender.length
+    ? tasksToRender.map((task) => renderTaskCard(task, selectedDate)).join("")
     : "";
 }
 
@@ -496,26 +515,6 @@ function renderTaskCard(task, activeDate) {
           .join("")}
       </div>
     </article>
-  `;
-}
-
-function renderTaskGroup(title, groupTasks, activeDate, emptyMessage) {
-  return `
-    <section class="task-group">
-      <div class="task-group-head">
-        <h3>${title}</h3>
-        <span class="task-group-count">${groupTasks.length}</span>
-      </div>
-      ${
-        groupTasks.length
-          ? `
-            <div class="task-group-list">
-              ${groupTasks.map((task) => renderTaskCard(task, activeDate)).join("")}
-            </div>
-          `
-          : `<div class="group-empty-state">${emptyMessage}</div>`
-      }
-    </section>
   `;
 }
 

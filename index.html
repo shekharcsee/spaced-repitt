@@ -135,7 +135,25 @@
             <p class="panel-label">Scheduled tasks</p>
             <h2 id="resultsTitle">Today's reviews</h2>
           </div>
-          <span id="resultsCount" class="results-pill">0 tasks</span>
+          <div class="task-toolbar">
+            <div class="view-switcher" role="tablist" aria-label="Task views">
+              <button
+                id="activeViewBtn"
+                type="button"
+                class="view-button is-active"
+              >
+                Main
+              </button>
+              <button
+                id="doneViewBtn"
+                type="button"
+                class="view-button"
+              >
+                Done
+              </button>
+            </div>
+            <span id="resultsCount" class="results-pill">0 tasks</span>
+          </div>
         </div>
 
         <div id="statusBanner" class="status-banner">
