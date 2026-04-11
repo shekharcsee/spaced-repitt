@@ -73,6 +73,7 @@ function init() {
   dateFilter.value = selectedDate;
   attachEvents();
   subscribeToTasks();
+  startTaskTimer();
 }
 
 function attachEvents() {
@@ -417,6 +418,7 @@ function renderTaskCard(task, activeDate) {
   const progressPercent = Math.round((completedDays / totalDays) * 100);
   const fullyCompleted = isTaskFullyCompleted(task);
   const highlightedReview = task.schedule.find((item) => item.date === activeDate);
+  const timerState = getTaskTimerState(highlightedReview);
 
   return `
     <article class="task-card ${fullyCompleted ? "is-complete" : ""}">
@@ -457,9 +459,16 @@ function renderTaskCard(task, activeDate) {
       </div>
 
       <div class="task-meta">
-        <span class="state-badge ${fullyCompleted ? "done" : "active"}">
-          ${fullyCompleted ? "Fully completed" : "In progress"}
-        </span>
+        <div class="task-status-stack">
+          <span class="state-badge ${fullyCompleted ? "done" : "active"}">
+            ${fullyCompleted ? "Fully completed" : "In progress"}
+          </span>
+          ${
+            timerState
+              ? `<span class="timer-badge ${timerState.kind}">${timerState.label}</span>`
+              : ""
+          }
+        </div>
 
         ${
           highlightedReview
@@ -520,6 +529,60 @@ function renderTaskCard(task, activeDate) {
 
 function isTaskFullyCompleted(task) {
   return task.schedule.every((item) => item.completed);
+}
+
+function getTaskTimerState(scheduleItem) {
+  if (!scheduleItem) {
+    return null;
+  }
+
+  if (scheduleItem.completed) {
+    return { kind: "done", label: "Completed for this day" };
+  }
+
+  const now = new Date();
+  const start = new Date(`${scheduleItem.date}T00:00:00`);
+  const end = new Date(`${scheduleItem.date}T23:59:59`);
+
+  if (now < start) {
+    return {
+      kind: "upcoming",
+      label: `Starts in ${formatTimeDistance(start.getTime() - now.getTime())}`,
+    };
+  }
+
+  if (now <= end) {
+    return {
+      kind: "urgent",
+      label: `Time left ${formatTimeDistance(end.getTime() - now.getTime())}`,
+    };
+  }
+
+  return {
+    kind: "overdue",
+    label: `Overdue by ${formatTimeDistance(now.getTime() - end.getTime())}`,
+  };
+}
+
+function formatTimeDistance(milliseconds) {
+  const totalMinutes = Math.max(1, Math.floor(milliseconds / 60000));
+  const days = Math.floor(totalMinutes / (60 * 24));
+  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) {
+    return `${days}d ${hours}h`;
+  }
+
+  return `${hours}h ${minutes}m`;
+}
+
+function startTaskTimer() {
+  window.setInterval(() => {
+    if (tasks.length > 0) {
+      renderTasks();
+    }
+  }, 60000);
 }
 
 async function uploadTaskImage(taskId, file) {

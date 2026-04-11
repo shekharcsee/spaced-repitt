@@ -426,6 +426,13 @@ input::placeholder {
   margin: 18px 0;
 }
 
+.task-status-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
 .state-badge.active {
   color: #8a5900;
   background: rgba(240, 187, 103, 0.18);
@@ -434,6 +441,33 @@ input::placeholder {
 .state-badge.done {
   color: #0f6847;
   background: rgba(32, 122, 91, 0.16);
+}
+
+.timer-badge {
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.timer-badge.upcoming {
+  color: #23538a;
+  background: rgba(84, 146, 255, 0.14);
+}
+
+.timer-badge.urgent {
+  color: #8a5900;
+  background: rgba(240, 187, 103, 0.2);
+}
+
+.timer-badge.overdue {
+  color: #8c3030;
+  background: rgba(196, 81, 81, 0.14);
+}
+
+.timer-badge.done {
+  color: #0f6847;
+  background: rgba(32, 122, 91, 0.14);
 }
 
 .today-emphasis {
