@@ -301,6 +301,10 @@ async function toggleCheckbox(taskId, scheduleIndex) {
     if (nextCompletedState && selectedScheduleItem.date === selectedDate) {
       showToast(`"${task.text}" moved to Done.`);
     }
+
+    if (!nextCompletedState && selectedScheduleItem.date === selectedDate) {
+      showToast(`"${task.text}" moved to Main.`);
+    }
   } catch (error) {
     console.error("Error updating checkbox:", error);
     statusBanner.textContent = "Checkbox update failed. Please try again.";
