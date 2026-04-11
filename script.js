@@ -253,6 +253,12 @@ function filterTasksByDate(dateString) {
   );
 }
 
+function isTaskDoneForDate(task, dateString) {
+  return task.schedule.some(
+    (item) => item.date === dateString && item.completed
+  );
+}
+
 async function toggleCheckbox(taskId, scheduleIndex) {
   const task = tasks.find((item) => item.id === taskId);
 
@@ -341,6 +347,12 @@ async function editTask(taskId) {
 function renderTasks() {
   const today = getTodayDate();
   const filteredTasks = filterTasksByDate(selectedDate);
+  const pendingTasks = filteredTasks.filter(
+    (task) => !isTaskDoneForDate(task, selectedDate)
+  );
+  const doneTasks = filteredTasks.filter((task) =>
+    isTaskDoneForDate(task, selectedDate)
+  );
   const showingToday = selectedDate === today;
 
   updateDashboardStats(today, filteredTasks.length);
@@ -357,12 +369,15 @@ function renderTasks() {
     ? "Today's reviews"
     : `Reviews for ${formatLongDate(selectedDate)}`;
 
-  resultsCount.textContent = `${filteredTasks.length} task${filteredTasks.length === 1 ? "" : "s"}`;
+  resultsCount.textContent = `${pendingTasks.length} active task${pendingTasks.length === 1 ? "" : "s"}`;
   emptyState.classList.toggle("hidden", filteredTasks.length > 0);
 
-  taskList.innerHTML = filteredTasks
-    .map((task) => renderTaskCard(task, selectedDate))
-    .join("");
+  taskList.innerHTML = filteredTasks.length
+    ? `
+        ${renderTaskGroup("To Do", pendingTasks, selectedDate, "No active tasks left for this date.")}
+        ${renderTaskGroup("Done", doneTasks, selectedDate, "Nothing completed for this date yet.")}
+      `
+    : "";
 }
 
 function updateDashboardStats(today, todayCount) {
@@ -481,6 +496,26 @@ function renderTaskCard(task, activeDate) {
           .join("")}
       </div>
     </article>
+  `;
+}
+
+function renderTaskGroup(title, groupTasks, activeDate, emptyMessage) {
+  return `
+    <section class="task-group">
+      <div class="task-group-head">
+        <h3>${title}</h3>
+        <span class="task-group-count">${groupTasks.length}</span>
+      </div>
+      ${
+        groupTasks.length
+          ? `
+            <div class="task-group-list">
+              ${groupTasks.map((task) => renderTaskCard(task, activeDate)).join("")}
+            </div>
+          `
+          : `<div class="group-empty-state">${emptyMessage}</div>`
+      }
+    </section>
   `;
 }
 

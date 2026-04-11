@@ -347,6 +347,47 @@ input::placeholder {
   gap: 18px;
 }
 
+.task-group {
+  display: grid;
+  gap: 16px;
+}
+
+.task-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-group-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.task-group-count {
+  min-width: 40px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid var(--line);
+  text-align: center;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.task-group-list {
+  display: grid;
+  gap: 18px;
+}
+
+.group-empty-state {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+}
+
 .task-card {
   border-radius: 26px;
   padding: 22px;
