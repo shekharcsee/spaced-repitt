@@ -45,6 +45,7 @@ const SCHEDULE_STEPS = [
 let tasks = [];
 let selectedDate = getTodayDate();
 let currentView = "active";
+let toastTimeoutId = null;
 
 const taskForm = document.getElementById("taskForm");
 const taskInput = document.getElementById("taskInput");
@@ -66,6 +67,7 @@ const todaySummary = document.getElementById("todaySummary");
 const statusBanner = document.getElementById("statusBanner");
 const activeViewBtn = document.getElementById("activeViewBtn");
 const doneViewBtn = document.getElementById("doneViewBtn");
+const toastMessage = document.getElementById("toastMessage");
 
 init();
 
@@ -277,6 +279,9 @@ async function toggleCheckbox(taskId, scheduleIndex) {
     return;
   }
 
+  const selectedScheduleItem = task.schedule[scheduleIndex];
+  const nextCompletedState = !selectedScheduleItem.completed;
+
   const updatedSchedule = task.schedule.map((item, index) => {
     if (index !== scheduleIndex) {
       return item;
@@ -292,6 +297,10 @@ async function toggleCheckbox(taskId, scheduleIndex) {
     await updateDoc(doc(db, "tasks", taskId), {
       schedule: updatedSchedule,
     });
+
+    if (nextCompletedState && selectedScheduleItem.date === selectedDate) {
+      showToast(`"${task.text}" moved to Done.`);
+    }
   } catch (error) {
     console.error("Error updating checkbox:", error);
     statusBanner.textContent = "Checkbox update failed. Please try again.";
@@ -583,6 +592,21 @@ function startTaskTimer() {
       renderTasks();
     }
   }, 60000);
+}
+
+function showToast(message) {
+  toastMessage.textContent = message;
+  toastMessage.classList.remove("hidden");
+  toastMessage.classList.add("is-visible");
+
+  if (toastTimeoutId) {
+    window.clearTimeout(toastTimeoutId);
+  }
+
+  toastTimeoutId = window.setTimeout(() => {
+    toastMessage.classList.remove("is-visible");
+    toastMessage.classList.add("hidden");
+  }, 2600);
 }
 
 async function uploadTaskImage(taskId, file) {
