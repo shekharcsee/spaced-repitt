@@ -99,9 +99,11 @@ function subscribeToTasks() {
         .map((item) => ({
           ...item.data(),
           id: item.id,
+          schedule: normalizeSchedule(item.data()),
         }))
         .sort((a, b) => b.createdDate.localeCompare(a.createdDate));
 
+      backfillMissingScheduleSteps(snapshot.docs);
       statusBanner.textContent = "Connected to Firestore with real-time sync.";
       statusBanner.classList.remove("error");
       renderTasks();
@@ -259,6 +261,47 @@ function generateSchedule(createdDate) {
     date: addDays(createdDate, step.offset),
     completed: false,
   }));
+}
+
+function normalizeSchedule(task) {
+  const savedSchedule = Array.isArray(task.schedule) ? task.schedule : [];
+
+  return SCHEDULE_STEPS.map((step) => {
+    const savedItem = savedSchedule.find((item) => item.day === step.day);
+
+    return {
+      day: step.day,
+      date: savedItem?.date || addDays(task.createdDate, step.offset),
+      completed: Boolean(savedItem?.completed),
+    };
+  });
+}
+
+async function backfillMissingScheduleSteps(taskDocs) {
+  const updates = taskDocs
+    .map((taskDoc) => {
+      const task = taskDoc.data();
+      const normalizedSchedule = normalizeSchedule(task);
+      const savedSchedule = Array.isArray(task.schedule) ? task.schedule : [];
+      const hasAllSteps = SCHEDULE_STEPS.every((step) =>
+        savedSchedule.some((item) => item.day === step.day)
+      );
+
+      return hasAllSteps
+        ? null
+        : updateDoc(taskDoc.ref, { schedule: normalizedSchedule });
+    })
+    .filter(Boolean);
+
+  if (updates.length === 0) {
+    return;
+  }
+
+  try {
+    await Promise.all(updates);
+  } catch (error) {
+    console.error("Error backfilling schedule:", error);
+  }
 }
 
 function filterTasksByDate(dateString) {
