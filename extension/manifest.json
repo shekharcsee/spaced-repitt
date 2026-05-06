@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "LoopLearn Reminders",
+  "description": "Create looping flashcard reminders with browser notifications while you browse.",
+  "version": "1.0.0",
+  "permissions": ["storage", "notifications", "alarms"],
+  "host_permissions": [],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "LoopLearn Reminders",
+    "default_popup": "popup.html",
+    "default_icon": "icon128.png"
+  },
+  "icons": {
+    "128": "icon128.png"
+  }
+}
